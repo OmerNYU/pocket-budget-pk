@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 
 export default function ScoreBar() {
+  // scoring and timing helpers
   const {
     getQuestScore,
     timerStart,

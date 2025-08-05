@@ -2,13 +2,22 @@ import React from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 
 export default function QuestPanel() {
-  const { quests, activeQuestId, setQuest, clearQuest } = useBudgetStore();
+  const {
+    quests,
+    activeQuestId,
+    setQuest,
+    clearQuest,
+    startTimer,
+    stopTimer,
+  } = useBudgetStore();
 
   const handleSelect = (id) => {
     if (activeQuestId === id) {
       clearQuest();
+      stopTimer();
     } else {
       setQuest(id);
+      startTimer();
     }
   };
 

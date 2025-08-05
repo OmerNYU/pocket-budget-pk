@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 // Chart.js and react-chartjs-2
 import { Doughnut } from 'react-chartjs-2';
@@ -17,6 +17,14 @@ export default function ChartPanel() {
   const totalOriginal = useBudgetStore((state) => state.getTotalOriginal());
   const totalCurrent = useBudgetStore((state) => state.getTotalCurrent());
 
+  // Trigger a subtle scale animation when current total updates
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    setAnimate(true);
+    const t = setTimeout(() => setAnimate(false), 300);
+    return () => clearTimeout(t);
+  }, [totalCurrent]);
+
   // Prepare data for the chart
   const data = {
     labels: ['Original', 'Current'],
@@ -30,10 +38,16 @@ export default function ChartPanel() {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
+    <div className="p-4 bg-white rounded-lg shadow flex flex-col items-center">
       <h2 className="text-xl font-semibold mb-2">Budget Allocation Comparison</h2>
-      <Doughnut data={data} />
-      <div className="mt-4 text-sm flex justify-around">
+      <div
+        className={`w-64 h-64 flex items-center justify-center transition-transform duration-300 ${
+          animate ? 'scale-105' : 'scale-100'
+        }`}
+      >
+        <Doughnut data={data} />
+      </div>
+      <div className="mt-4 text-sm flex justify-around w-full">
         <div className="flex items-center">
           <span className="inline-block w-3 h-3 bg-[#0069B4] mr-1"></span>Original
         </div>

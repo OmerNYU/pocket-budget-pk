@@ -17,7 +17,6 @@ export default function ImpactTooltip() {
     if (Math.abs(deltaPct) < 1) return [];// skip tiny changes
 
     const effect = (rule.coeff * deltaPct).toFixed(1);
-    const direction = deltaPct > 0 ? 'increase' : 'decrease';
     const verb = deltaPct > 0 ? 'Increasing' : 'Decreasing';
 
     return [`${verb} ${name} by ${Math.abs(deltaPct.toFixed(1))}% will ${rule.description} by ${Math.abs(effect)} ${rule.unit}.`];

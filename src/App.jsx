@@ -9,9 +9,11 @@ import BadgeModal from './components/BadgeModal';
 import { useBudgetStore } from './hooks/useBudgetStore';
 
 export default function App() {
-  const activeQuestId = useBudgetStore((s) => s.activeQuestId);
-  const recentBadge = useBudgetStore((s) => s.recentBadge);
-  const clearRecentBadge = useBudgetStore((s) => s.clearRecentBadge);
+  const { activeQuestId, recentBadge, clearRecentBadge } = useBudgetStore((s) => ({
+    activeQuestId: s.activeQuestId,
+    recentBadge: s.recentBadge,
+    clearRecentBadge: s.clearRecentBadge,
+  }));
   const [showBadges, setShowBadges] = React.useState(false);
 
   React.useEffect(() => {

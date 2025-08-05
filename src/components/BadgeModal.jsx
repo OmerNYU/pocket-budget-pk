@@ -2,8 +2,10 @@ import React from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 
 export default function BadgeModal({ onClose }) {
-  const badges = useBudgetStore((s) => s.badges);
-  const earnedBadges = useBudgetStore((s) => s.earnedBadges);
+  const { badges, earnedBadges } = useBudgetStore((s) => ({
+    badges: s.badges,
+    earnedBadges: s.earnedBadges,
+  }));
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

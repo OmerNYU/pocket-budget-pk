@@ -1,20 +1,12 @@
 [
-  {
-    "sector": "CABINET SECRETARIAT",
-    "coeff": 0.02,
-    "description": "administrative efficiency loss",
-    "unit": "percentage points"
-  },
-  {
-    "sector": "AVIATION MINISTRY",
-    "coeff": 0.05,
-    "description": "flight delay minutes",
-    "unit": "minutes"
-  },
-  {
-    "sector": "EDUCATION MINISTRY",
-    "coeff": 0.1,
-    "description": "student dropout rate increase",
-    "unit": "percentage points"
-  }
+  { "sector": "FINANCE AND REVENUE MINISTRY", "short": "Finance", "coeff": 0.5, "description": "tax refunds", "unit": " days" },
+  { "sector": "ECONOMIC AFFAIRS MINISTRY", "short": "Economic Affairs", "coeff": 0.1, "description": "project delays", "unit": " months" },
+  { "sector": "DEFENCE MINISTRY", "short": "Defence", "coeff": -0.3, "description": "readiness", "unit": "%" },
+  { "sector": "POVERTY ALLEVIATION AND SOCIAL SAFETY MINISTRY", "short": "Social Safety", "coeff": -1000, "description": "families helped", "unit": "" },
+  { "sector": "ENERGY MINISTRY", "short": "Energy", "coeff": 0.2, "description": "outage hours", "unit": " h" },
+  { "sector": "INTERIOR AND NARCOTICS CONTROL MINISTRY", "short": "Interior", "coeff": 0.3, "description": "response time", "unit": " min" },
+  { "sector": "CABINET SECRETARIAT", "short": "Cabinet", "coeff": -0.1, "description": "gov efficiency", "unit": "%" },
+  { "sector": "FOREIGN AFFAIRS MINISTRY", "short": "Foreign Affairs", "coeff": -1, "description": "diplomatic missions", "unit": "" },
+  { "sector": "FEDERAL EDUCATION PROFESSIONAL TRAINING Pages NATIONAL HERITAGE AND CULTURE MINISTRY", "short": "Education", "coeff": -0.5, "description": "student outcomes", "unit": "%" },
+  { "sector": "RAILWAYS MINISTRY", "short": "Railways", "coeff": 0.4, "description": "train delays", "unit": " min" }
 ]

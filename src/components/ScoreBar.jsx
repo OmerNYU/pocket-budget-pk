@@ -9,7 +9,7 @@ export default function ScoreBar() {
     isTimerRunning,
     stopTimer,
     getFinalScore,
-  } = useBudgetStore();
+  } = useBudgetStore(); // scoring and timing helpers
   const { score, success } = getQuestScore();
   const barColor = success ? 'bg-green-500' : 'bg-red-500';
 

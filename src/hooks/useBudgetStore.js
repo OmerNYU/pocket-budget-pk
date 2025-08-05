@@ -27,15 +27,37 @@ export const useBudgetStore = create((set, get) => ({
   ],
   activeQuestId: null,
 
+  // Badge definitions
+  badges: [
+    {
+      id: 'balanced',
+      name: 'Balanced Budget',
+      description: 'Total allocations match the original budget.',
+    },
+    {
+      id: 'health',
+      name: 'Health Champion',
+      description: 'Increase Health budget by at least 20%.',
+    },
+  ],
+  earnedBadges: [],
+  recentBadge: null,
+
   // Update a sector's current value
-  setSectorValue: (name, newValue) => set((state) => ({
-    sectors: state.sectors.map((sec) =>
-      sec.name === name ? { ...sec, value: newValue } : sec
-    ),
-  })),
+  setSectorValue: (name, newValue) => {
+    set((state) => ({
+      sectors: state.sectors.map((sec) =>
+        sec.name === name ? { ...sec, value: newValue } : sec
+      ),
+    }));
+    get().checkBadges();
+  },
 
   // Reset all sectors to original values
-  resetSectors: () => set({ sectors: initialSectors }),
+  resetSectors: () => {
+    set({ sectors: initialSectors });
+    get().checkBadges();
+  },
 
   // Get total of original allocations
   getTotalOriginal: () => initialSectors.reduce((sum, s) => sum + s.original, 0),
@@ -79,4 +101,35 @@ export const useBudgetStore = create((set, get) => ({
       increasePct >= quest.target.pct && constraintsMet;
     return { score, success };
   },
+
+  // Badge evaluation
+  checkBadges: () => {
+    const { badges, earnedBadges } = get();
+    const updates = {};
+    const newEarned = [];
+
+    const totalCurrent = get().getTotalCurrent();
+    const totalOriginal = get().getTotalOriginal();
+    const sectors = get().sectors;
+    const health = sectors.find((s) => s.name === 'HEALTH MINISTRY');
+
+    const conditions = {
+      balanced: Math.round(totalCurrent) === Math.round(totalOriginal),
+      health: health && health.value >= health.original * 1.2,
+    };
+
+    badges.forEach((b) => {
+      if (!earnedBadges.includes(b.id) && conditions[b.id]) {
+        newEarned.push(b.id);
+      }
+    });
+
+    if (newEarned.length > 0) {
+      updates.earnedBadges = [...earnedBadges, ...newEarned];
+      updates.recentBadge = badges.find((b) => b.id === newEarned[0]);
+      set(updates);
+    }
+  },
+
+  clearRecentBadge: () => set({ recentBadge: null }),
 }));

@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import budgetData from '../data/budget2025.json';
 
 // Transform imported data: keep original and current values

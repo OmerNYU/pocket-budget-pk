@@ -1,0 +1,20 @@
+[
+  {
+    "sector": "CABINET SECRETARIAT",
+    "coeff": 0.02,
+    "description": "administrative efficiency loss",
+    "unit": "percentage points"
+  },
+  {
+    "sector": "AVIATION MINISTRY",
+    "coeff": 0.05,
+    "description": "flight delay minutes",
+    "unit": "minutes"
+  },
+  {
+    "sector": "EDUCATION MINISTRY",
+    "coeff": 0.1,
+    "description": "student dropout rate increase",
+    "unit": "percentage points"
+  }
+]

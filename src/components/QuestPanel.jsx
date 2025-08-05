@@ -2,6 +2,7 @@ import React from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 
 export default function QuestPanel() {
+  // Access quest data and timer controls from the store
   const {
     quests,
     activeQuestId,

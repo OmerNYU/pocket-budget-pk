@@ -32,6 +32,7 @@ export const useBudgetStore = create((set, get) => ({
   elapsedTime: 0,
   isTimerRunning: false,
 
+  // Timer controls
   startTimer: () =>
     set({ timerStart: Date.now(), elapsedTime: 0, isTimerRunning: true }),
   stopTimer: () =>

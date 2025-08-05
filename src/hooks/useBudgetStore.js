@@ -27,6 +27,25 @@ export const useBudgetStore = create((set, get) => ({
   ],
   activeQuestId: null,
 
+  // Timer state
+  timerStart: null,
+  elapsedTime: 0,
+  isTimerRunning: false,
+
+  startTimer: () =>
+    set({ timerStart: Date.now(), elapsedTime: 0, isTimerRunning: true }),
+  stopTimer: () =>
+    set((state) => {
+      if (!state.isTimerRunning || !state.timerStart)
+        return { isTimerRunning: false };
+      const elapsed = Date.now() - state.timerStart;
+      return {
+        timerStart: null,
+        elapsedTime: elapsed,
+        isTimerRunning: false,
+      };
+    }),
+
   // Update a sector's current value
   setSectorValue: (name, newValue) => set((state) => ({
     sectors: state.sectors.map((sec) =>
@@ -78,5 +97,19 @@ export const useBudgetStore = create((set, get) => ({
     const success =
       increasePct >= quest.target.pct && constraintsMet;
     return { score, success };
+  },
+
+  // Compute final score with time and budget balance
+  getFinalScore: () => {
+    const { elapsedTime, getTotalOriginal, getTotalCurrent, getQuestScore } =
+      get();
+    const { score } = getQuestScore();
+    const timePenalty = Math.floor(elapsedTime / 1000);
+    const diff = Math.abs(getTotalOriginal() - getTotalCurrent());
+    const balancePenalty = Math.round(
+      (diff / getTotalOriginal()) * 100
+    );
+    const final = Math.max(0, score - timePenalty - balancePenalty);
+    return { final, timePenalty, balancePenalty };
   },
 }));

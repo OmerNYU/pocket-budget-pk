@@ -11,6 +11,8 @@ const initialSectors = budgetData.map((s) => ({
 // Zustand store
 export const useBudgetStore = create((set, get) => ({
   sectors: initialSectors,
+  lang: 'en',
+  setLang: (lang) => set({ lang }),
 
   // Quest definitions
   quests: [

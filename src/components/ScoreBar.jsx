@@ -1,10 +1,14 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 import { shallow } from 'zustand/shallow';
 
 const ScoreBar = () => {
+  // Selecting the score and success fields directly keeps the snapshot
+  // from changing on every render. Using the getter function previously
+  // returned a fresh object each time which triggered React's
+  // `useSyncExternalStore` warning and an update loop.
   const { score, success } = useBudgetStore(
-    (s) => s.getQuestScore(),
+    (s) => ({ score: s.score, success: s.success }),
     shallow
   );
   const barColor = success ? 'bg-green-500' : 'bg-red-500';

@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import { useCallback, memo } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 import { shallow } from 'zustand/shallow';
 
@@ -6,10 +6,9 @@ const QuestCard = memo(function QuestCard({ quest, active, onSelect }) {
   return (
     <button
       onClick={() => onSelect(quest.id)}
-      className={`p-3 rounded-md text-left w-60 transition transform hover:scale-105 focus:outline-none $
-        {
-          active ? 'bg-orange-500 text-white' : 'bg-blue-600 text-white'
-        }`}
+      className={`p-3 rounded-md text-left w-60 transition transform hover:scale-105 focus:outline-none ${
+        active ? 'bg-orange-500 text-white' : 'bg-blue-600 text-white'
+      }`}
     >
       <div className="font-semibold">{quest.name}</div>
       <p className="text-sm mt-1">{quest.description}</p>

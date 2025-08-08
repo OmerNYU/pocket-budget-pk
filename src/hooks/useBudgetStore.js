@@ -28,52 +28,26 @@ export const useBudgetStore = create((set, get) => ({
     },
   ],
   activeQuestId: null,
-
-  // Badge definitions
-  badges: [
-    {
-      id: 'balanced',
-      name: 'Balanced Budget',
-      description: 'Total allocations match the original budget.',
-    },
-    {
-      id: 'health',
-      name: 'Health Champion',
-      description: 'Increase Health budget by at least 20%.',
-    },
-  ],
-  earnedBadges: [],
-  recentBadge: null,
-
-  // Timer state
-  timerStart: null,
-  elapsedTime: 0,
-  isTimerRunning: false,
-
-  // Timer controls
-  startTimer: () =>
-    set({ timerStart: Date.now(), elapsedTime: 0, isTimerRunning: true }),
-  stopTimer: () =>
-    set((state) => {
-      if (!state.isTimerRunning || !state.timerStart)
-        return { isTimerRunning: false };
-      const elapsed = Date.now() - state.timerStart;
-      return {
-        timerStart: null,
-        elapsedTime: elapsed,
-        isTimerRunning: false,
-      };
-    }),
+  score: 0,
+  success: false,
+  highScore: 0,
+  toasts: [],
 
   // Update a sector's current value
-  setSectorValue: (name, newValue) => set((state) => ({
-    sectors: state.sectors.map((sec) =>
-      sec.name === name ? { ...sec, value: newValue } : sec
-    ),
-  })),
+  setSectorValue: (name, newValue) => {
+    set((state) => ({
+      sectors: state.sectors.map((sec) =>
+        sec.name === name ? { ...sec, value: newValue } : sec
+      ),
+    }));
+    if (get().activeQuestId) get().computeQuestScore();
+  },
 
   // Reset all sectors to original values
-  resetSectors: () => set({ sectors: initialSectors }),
+  resetSectors: () => {
+    set({ sectors: initialSectors });
+    if (get().activeQuestId) get().computeQuestScore();
+  },
 
   // Get total of original allocations
   getTotalOriginal: () => initialSectors.reduce((sum, s) => sum + s.original, 0),
@@ -83,13 +57,23 @@ export const useBudgetStore = create((set, get) => ({
 
   // Quest actions
   setQuest: (id) => set({ activeQuestId: id }),
-  clearQuest: () => set({ activeQuestId: null }),
+  clearQuest: () => set({ activeQuestId: null, score: 0, success: false }),
 
-  // Compute quest score
-  getQuestScore: () => {
-    const { activeQuestId, quests, sectors } = get();
+  // Compute quest score and store result
+  computeQuestScore: () => {
+    const {
+      activeQuestId,
+      quests,
+      sectors,
+      highScore,
+      success: prevSuccess,
+      toasts,
+    } = get();
     const quest = quests.find((q) => q.id === activeQuestId);
-    if (!quest) return { score: 0, success: false };
+    if (!quest) {
+      set({ score: 0, success: false });
+      return;
+    }
 
     const targetSec = sectors.find((s) => s.name === quest.target.sector);
     const increasePct =
@@ -107,7 +91,6 @@ export const useBudgetStore = create((set, get) => ({
       if (pct >= c.minPct) {
         score += share;
       } else {
-        score -= share;
         constraintsMet = false;
       }
     });
@@ -115,51 +98,30 @@ export const useBudgetStore = create((set, get) => ({
     score = Math.max(0, Math.min(100, Math.round(score)));
     const success =
       increasePct >= quest.target.pct && constraintsMet;
+
+    const newToasts = [];
+    if (score > highScore) {
+      newToasts.push({ id: Date.now() + Math.random(), message: `New high score: ${score}` });
+    }
+    if (success && !prevSuccess) {
+      newToasts.push({ id: Date.now() + Math.random(), message: 'Quest completed!' });
+    }
+
+    set({
+      score,
+      success,
+      highScore: Math.max(highScore, score),
+      toasts: newToasts.length ? [...toasts, ...newToasts] : toasts,
+    });
+  },
+
+  // Getter for quest score
+  getQuestScore: () => {
+    const { score, success } = get();
     return { score, success };
   },
   
-  // Badge evaluation
-  checkBadges: () => {
-    const { badges, earnedBadges } = get();
-    const updates = {};
-    const newEarned = [];
-
-    const totalCurrent = get().getTotalCurrent();
-    const totalOriginal = get().getTotalOriginal();
-    const sectors = get().sectors;
-    const health = sectors.find((s) => s.name === 'HEALTH MINISTRY');
-
-    const conditions = {
-      balanced: Math.round(totalCurrent) === Math.round(totalOriginal),
-      health: health && health.value >= health.original * 1.2,
-    };
-
-    badges.forEach((b) => {
-      if (!earnedBadges.includes(b.id) && conditions[b.id]) {
-        newEarned.push(b.id);
-      }
-    });
-
-    if (newEarned.length > 0) {
-      updates.earnedBadges = [...earnedBadges, ...newEarned];
-      updates.recentBadge = badges.find((b) => b.id === newEarned[0]);
-      set(updates);
-    }
-  },
-
-  clearRecentBadge: () => set({ recentBadge: null }),
-
-  // Compute final score with time and budget balance
-  getFinalScore: () => {
-    const { elapsedTime, getTotalOriginal, getTotalCurrent, getQuestScore } =
-      get();
-    const { score } = getQuestScore();
-    const timePenalty = Math.floor(elapsedTime / 1000);
-    const diff = Math.abs(getTotalOriginal() - getTotalCurrent());
-    const balancePenalty = Math.round(
-      (diff / getTotalOriginal()) * 100
-    );
-    const final = Math.max(0, score - timePenalty - balancePenalty);
-    return { final, timePenalty, balancePenalty };
-  },
+  // Toast utilities
+  removeToast: (id) =>
+    set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
 }));

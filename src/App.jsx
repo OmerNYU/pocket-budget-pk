@@ -5,6 +5,7 @@ import ChartPanel from './components/ChartPanel';
 import ImpactTooltip from './components/ImpactTooltip.jsx';
 import QuestPanel from './components/QuestPanel';
 import ScoreBar from './components/ScoreBar';
+import ToastContainer from './components/ToastContainer';
 import { useBudgetStore } from './hooks/useBudgetStore';
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
         <ImpactTooltip />
         <BudgetBoard />
       </main>
+      <ToastContainer />
     </div>
   );
 }

@@ -1,16 +1,12 @@
 import { memo } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
-import { shallow } from 'zustand/shallow';
 
 const ScoreBar = () => {
-  // Selecting the score and success fields directly keeps the snapshot
-  // from changing on every render. Using the getter function previously
-  // returned a fresh object each time which triggered React's
-  // `useSyncExternalStore` warning and an update loop.
-  const { score, success } = useBudgetStore(
-    (s) => ({ score: s.score, success: s.success }),
-    shallow
-  );
+  // Select each field separately so the selector never returns a new object.
+  // React 19 requires snapshots from external stores to be referentially
+  // stable during a render; returning objects can trigger warnings and rerender loops.
+  const score = useBudgetStore((s) => s.score);
+  const success = useBudgetStore((s) => s.success);
   const barColor = success ? 'bg-green-500' : 'bg-red-500';
 
   return (

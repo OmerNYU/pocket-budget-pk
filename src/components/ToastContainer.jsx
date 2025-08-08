@@ -1,6 +1,5 @@
 import React, { useEffect, memo } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
-import { shallow } from 'zustand/shallow';
 
 const Toast = memo(function Toast({ id, message, onRemove }) {
   useEffect(() => {
@@ -16,10 +15,9 @@ const Toast = memo(function Toast({ id, message, onRemove }) {
 });
 
 export default function ToastContainer() {
-  const { toasts, removeToast } = useBudgetStore(
-    (s) => ({ toasts: s.toasts, removeToast: s.removeToast }),
-    shallow
-  );
+  // Select store slices individually to keep the snapshot stable.
+  const toasts = useBudgetStore((s) => s.toasts);
+  const removeToast = useBudgetStore((s) => s.removeToast);
 
   return (
     <div className="fixed top-4 right-4 space-y-2 z-50">

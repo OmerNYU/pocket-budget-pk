@@ -1,3 +1,4 @@
+import React from 'react';
 import rulesList from '../data/impact_rules.json';
 import { useBudgetStore } from '../hooks/useBudgetStore';
 import { shallow } from 'zustand/shallow';

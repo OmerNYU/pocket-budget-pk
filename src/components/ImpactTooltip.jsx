@@ -25,7 +25,12 @@ export default function ImpactTooltip() {
     const impactVerb = effect >= 0 ? t('increase', lang) : t('decrease', lang);
     const icon = effect >= 0 ? '✅' : Math.abs(deltaPct) > 15 ? '❗' : '⚠️';
 
-    const msg = `${verb} ${rule.short || name} ${t('by', lang)} ${Math.abs(deltaPct).toFixed(1)}% ${t('will', lang)} ${impactVerb} ${rule.description} ${t('by', lang)} ${Math.abs(effect).toFixed(1)}${rule.unit}.`;
+    const msg = `${verb} ${rule.short || name} ${t('by', lang)} ${Math.abs(
+      deltaPct
+    ).toFixed(1)}% ${t('will', lang)} ${impactVerb} ${rule.description} ${t(
+      'by',
+      lang
+    )} ${Math.abs(effect).toFixed(1)}${rule.unit}.`;
     return [{ icon, text: msg }];
   });
 

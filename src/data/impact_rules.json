@@ -8,5 +8,6 @@
   { "sector": "CABINET SECRETARIAT", "short": "Cabinet", "coeff": 0.1, "description": "gov efficiency", "unit": "%" },
   { "sector": "FOREIGN AFFAIRS MINISTRY", "short": "Foreign Affairs", "coeff": 1, "description": "diplomatic missions", "unit": "" },
   { "sector": "FEDERAL EDUCATION PROFESSIONAL TRAINING Pages NATIONAL HERITAGE AND CULTURE MINISTRY", "short": "Education", "coeff": 0.5, "description": "student outcomes", "unit": "%" },
-  { "sector": "RAILWAYS MINISTRY", "short": "Railways", "coeff": -0.4, "description": "train delays", "unit": " min" }
+  { "sector": "RAILWAYS MINISTRY", "short": "Railways", "coeff": -0.4, "description": "train delays", "unit": " min" },
+  { "sector": "HEALTH MINISTRY", "short": "Health", "coeff": -0.25, "description": "life expectancy", "unit": " years" }
 ]

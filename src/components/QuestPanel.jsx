@@ -1,6 +1,5 @@
 import { useCallback, memo } from 'react';
 import { useBudgetStore } from '../hooks/useBudgetStore';
-import { shallow } from 'zustand/shallow';
 
 const QuestCard = memo(function QuestCard({ quest, active, onSelect }) {
   return (
@@ -17,16 +16,13 @@ const QuestCard = memo(function QuestCard({ quest, active, onSelect }) {
 });
 
 function QuestPanel() {
-  const { quests, activeQuestId, setQuest, computeQuestScore } =
-    useBudgetStore(
-      (s) => ({
-        quests: s.quests,
-        activeQuestId: s.activeQuestId,
-        setQuest: s.setQuest,
-        computeQuestScore: s.computeQuestScore,
-      }),
-      shallow
-    );
+  // Select each piece of state individually to avoid returning a new object
+  // from the store selector. Returning new objects causes React 19 to warn
+  // about uncached snapshots and can lead to infinite re-render loops.
+  const quests = useBudgetStore((s) => s.quests);
+  const activeQuestId = useBudgetStore((s) => s.activeQuestId);
+  const setQuest = useBudgetStore((s) => s.setQuest);
+  const computeQuestScore = useBudgetStore((s) => s.computeQuestScore);
 
   const handleSelect = useCallback(
     (id) => {

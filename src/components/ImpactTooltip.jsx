@@ -4,11 +4,9 @@ import { useBudgetStore } from '../hooks/useBudgetStore';
 import { t } from '../i18n';
 
 export default function ImpactTooltip() {
-  // Pull state
-  const { sectors, lang } = useBudgetStore((state) => ({
-    sectors: state.sectors,
-    lang: state.lang || 'en',
-  }));
+  // Pull state; select each field individually so the snapshot is stable.
+  const sectors = useBudgetStore((state) => state.sectors);
+  const lang = useBudgetStore((state) => state.lang || 'en');
 
   // Build consequence messages
   const messages = sectors.flatMap((sec) => {
